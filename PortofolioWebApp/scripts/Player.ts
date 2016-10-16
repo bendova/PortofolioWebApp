@@ -2,6 +2,9 @@
 {
     private game: Game;
 
+    private spriteMgr: BABYLON.SpriteManager;
+    private sprite: BABYLON.Sprite;
+
     constructor(game:Game)
     {
         this.game = game;
@@ -12,15 +15,31 @@
     {
         let textureUrl: string = this.game.SCENE_PATH + "Character.png";
         let cellSize: number = 350;
-        let playerSpriteMgr: BABYLON.SpriteManager = new BABYLON.SpriteManager("PlayerSpriteManager", textureUrl, 1, cellSize, this.game.scene);
-        let playerSprite = new BABYLON.Sprite("Player", playerSpriteMgr);
-        playerSprite.position = new BABYLON.Vector3(17.42, 1.71, 7);
-        playerSprite.size = 8;
+        this.spriteMgr = new BABYLON.SpriteManager("PlayerSpriteManager", textureUrl, 1, cellSize, this.game.scene);
+        this.sprite = new BABYLON.Sprite("Player", this.spriteMgr);
+        this.sprite.position = new BABYLON.Vector3(17.42, 1.71, 7);
+        this.sprite.size = 8;
     }
-
+    
     public update(dt: number): void
     {
-        //let inputMgr: BABYLON.CameraInputsManager<BABYLON.Camera> = this.game.camera.inputs;
-        //TODO
+        this.handleInput(dt);
+    }
+
+    private handleInput(dt:number): void
+    {
+        let move: number = 0;
+        if (this.game.input.isMoveLeft())
+        {
+            move += -1;
+        }
+        if (this.game.input.isMoveRight())
+        {
+            move += 1;
+        }
+
+        let moveSpeed: number = 10;
+        let moveDelta: number = moveSpeed * move * dt;
+        this.sprite.position.x += moveDelta;
     }
 }

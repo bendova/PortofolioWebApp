@@ -23,12 +23,15 @@ var Game = (function () {
                 scene.executeWhenReady(function () {
                     _this.configureCamera();
                     _this.createGameEntities();
+                    _this.registerForInput();
+                    _this.scene.debugLayer.show(true);
                     _this.engine.runRenderLoop(function () {
                         _this.onRender();
                     });
                 });
                 scene.registerBeforeRender(function () {
-                    _this.onUpdate(_this.engine.getDeltaTime());
+                    var dt = _this.engine.getDeltaTime() / 1000;
+                    _this.onUpdate(dt);
                 });
             });
             window.addEventListener("resize", function () {
@@ -60,12 +63,22 @@ var Game = (function () {
     Game.prototype.createGameEntities = function () {
         this.player = new Player(this);
     };
+    Game.prototype.registerForInput = function () {
+        this.input = new Input();
+        this.input.registerForInputEvents(this);
+    };
     Game.prototype.onUpdate = function (dt) {
         this.player.update(dt);
     };
     Game.prototype.onRender = function () {
         this.refreshCameraParams();
         this.scene.render();
+    };
+    Game.prototype.handleKeyDown = function (evt) {
+        console.log("handleKeyDown() evt: " + evt);
+    };
+    Game.prototype.handleKeyUp = function (evt) {
+        console.log("handleKeyUp() evt: " + evt);
     };
     return Game;
 }());

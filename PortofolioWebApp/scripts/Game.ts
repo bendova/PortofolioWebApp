@@ -4,7 +4,7 @@ window.onload = () =>
     let main = new Game();
 };
 
-class Game
+class Game implements InputHandler
 {
     public SCENE_PATH:string  = "scene/"
 
@@ -25,6 +25,8 @@ class Game
     private orthoSizeY: number = 0;
     private orthoScaleFactor: number = 1.2;
 
+    public input: Input;
+
     private player: Player;
 
     constructor()
@@ -42,6 +44,9 @@ class Game
                 {
                     this.configureCamera();
                     this.createGameEntities();
+                    this.registerForInput();
+
+                    this.scene.debugLayer.show(true);
 
                     this.engine.runRenderLoop(() =>
                     {
@@ -50,7 +55,8 @@ class Game
                 });
                 scene.registerBeforeRender(() =>
                 {
-                    this.onUpdate(this.engine.getDeltaTime());
+                    let dt: number = this.engine.getDeltaTime() / 1000;
+                    this.onUpdate(dt);
                 });
             });
 
@@ -93,6 +99,12 @@ class Game
         this.player = new Player(this);
     }
 
+    private registerForInput(): void
+    {
+        this.input = new Input();
+        this.input.registerForInputEvents(this);
+    }
+
     private onUpdate(dt:number): void
     {
         this.player.update(dt);
@@ -102,5 +114,15 @@ class Game
     {
         this.refreshCameraParams();
         this.scene.render();
+    }
+
+    public handleKeyDown(evt: KeyboardKeyCode): void
+    {
+        console.log("handleKeyDown() evt: " + evt);
+    }
+
+    public handleKeyUp(evt: KeyboardKeyCode): void
+    {
+        console.log("handleKeyUp() evt: " + evt);
     }
 }

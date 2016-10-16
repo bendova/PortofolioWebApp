@@ -77,6 +77,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="scripts\Game.ts" />
     <TypeScriptCompile Include="scripts\babylon.2.4.d.ts" />
+    <TypeScriptCompile Include="scripts\Input.ts" />
     <TypeScriptCompile Include="scripts\Player.ts" />
   </ItemGroup>
   <PropertyGroup>
